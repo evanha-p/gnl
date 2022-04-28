@@ -6,11 +6,22 @@
 /*   By: evanha-p <evanha-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 17:57:41 by evanha-p          #+#    #+#             */
-/*   Updated: 2022/04/28 13:32:08 by evanha-p         ###   ########.fr       */
+/*   Updated: 2022/04/28 15:47:00 by evanha-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+/* Saves what we have in variable saved to variable line.
+ * First we check where the '\n' if there is one.
+ * We save everything before the first '\n' to line and the
+ * rest to variable temp. After this we clear and free saved pointer
+ * and set the pointer to temp and return 1.
+ *
+ * If we don't find '\n' we simply dublicate everything to line
+ * and clear and free variable saved. We return 1 if there is
+ * still something in variable line. Otherwise we return 0
+ * meaning we have finished reading the file. */
 
 int	ft_savestring(char **line, char **saved, int fd, int ret)
 {
@@ -37,6 +48,11 @@ int	ft_savestring(char **line, char **saved, int fd, int ret)
 	return (1);
 }
 
+/* Combines what we already have stored
+ * in variable saved and what we read from buffer.
+ * It stores it to temp returning it and clears
+ * the variable saved. */
+
 void	ft_joinandclean(char **saved, char *buffer, int fd)
 {
 	char	*temp;
@@ -46,6 +62,17 @@ void	ft_joinandclean(char **saved, char *buffer, int fd)
 	ft_strdel(&saved[fd]);
 	saved[fd] = temp;
 }
+
+/* The main function. First we check for errors and if
+ * there is already something saved that includes '\n'. If
+ * so we don't have to read again so we skip that part and
+ * jump straight to ft_savestring.
+ * In the while loop we read until we:
+ * a) reach the end of file
+ * b) find '\n'
+ * In lines 76 to 79 we check if we already have something saved
+ * and react respectively. If we don't we duplicate, if we do,
+ * we combine the stringsi */
 
 int	get_next_line(const int fd, char **line)
 {
